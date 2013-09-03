@@ -47,7 +47,6 @@ config.presentationImageFolder = (meetingID, presentationID) ->
 # TODO: Temporary values to test the integration with WebRTC audio
 config.temp = {}
 config.temp.username = "WebRTC audio user"
-config.temp.voiceBridge = "79068"
 
 
 module.exports = config

@@ -28,7 +28,14 @@ define [
 
     # TODO: temporary to test audio via WebRTC
     _webrtcConnect: ->
-      globals.connection.webrtcConnect globals.username, globals.presentationServer, globals.voiceBridge, (message) ->
+      voiceBridge = $("#webrtc-connect-number").val()
+      console.log "HTML5 dialing to", globals.presentationServer, voiceBridge
+      globals.connection.webrtcConnect globals.username, globals.presentationServer, voiceBridge, (message) ->
+        if message?
+          $("#webrtc-connect-btn").addClass("error")
+        else
+          $("#webrtc-connect-btn").addClass("success")
+        console.log "HTML5 client got WebRTC response:", message
 
     initialize: ->
       @$parentEl = null
