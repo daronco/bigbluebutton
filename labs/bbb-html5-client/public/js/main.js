@@ -10,6 +10,9 @@ requirejs.config({
     },
     'underscore': {
       exports: "_"
+    },
+    'SIPml': {
+      exports: "SIPml"
     }
   },
   paths: {
@@ -18,6 +21,9 @@ requirejs.config({
     // it with require.js
     'jquery': 'http://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min',
     'jquery.ui': 'http://ajax.googleapis.com/ajax/libs/jqueryui/1.9.2/jquery-ui.min',
+
+    'webrtc': 'lib/bbb_webrtc_bridge',
+    'SIPml': 'lib/sipml5api',
 
     'jquery.mousewheel': 'lib/jquery/jquery.mousewheel.min',
     'jquery.autosize': 'lib/jquery/jquery.autosize-min',

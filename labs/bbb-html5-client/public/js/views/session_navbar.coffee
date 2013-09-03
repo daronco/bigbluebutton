@@ -3,7 +3,7 @@ define [
   'underscore',
   'backbone',
   'globals',
-  'text!templates/session_navbar.html',
+  'text!templates/session_navbar.html'
 ], ($, _, Backbone, globals, sessionNavbarTemplate) ->
 
   # The navbar in a session
@@ -14,6 +14,9 @@ define [
       # TODO: temporary adaptation for iPads: chat always visible
       # "click #chat-btn": "_toggleChat"
 
+      # TODO: temporary to test audio via WebRTC
+      "click #webrtc-connect-btn": "_webrtcConnect"
+
       "click #users-btn": "_toggleUsers"
       "click #logout-btn": "_logout"
       "click #prev-slide-btn": "_previousSlide"
@@ -22,6 +25,10 @@ define [
       "click #tool-line-btn": "_toolLine"
       "click #tool-rect-btn": "_toolRect"
       "click #tool-ellipse-btn": "_toolEllipse"
+
+    # TODO: temporary to test audio via WebRTC
+    _webrtcConnect: ->
+      globals.connection.webrtcConnect globals.username, globals.presentationServer, globals.voiceBridge, (message) ->
 
     initialize: ->
       @$parentEl = null

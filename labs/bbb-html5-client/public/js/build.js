@@ -19,6 +19,9 @@
     },
     'underscore': {
       exports: "_"
+    },
+    'SIPml': {
+      exports: "SIPml"
     }
   },
 
@@ -31,6 +34,9 @@
     //       now it is being loaded directly in the html (not by require.js).
     'jquery': 'empty:',
     'jquery.ui': 'empty:',
+
+    'webrtc': 'lib/bbb_webrtc_bridge',
+    'SIPml': 'lib/sipml5api',
 
     'jquery.mousewheel': 'lib/jquery/jquery.mousewheel.min',
     'jquery.autosize': 'lib/jquery/jquery.autosize-min',

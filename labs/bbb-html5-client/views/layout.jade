@@ -26,7 +26,9 @@ html
         server = server + '/';
       return {
         bootstrappedMeetings: !{JSON.stringify(meetings)},
-        presentationServer: server
+        presentationServer: server,
+        voiceBridge: "#{h_config.temp.voiceBridge}",
+        username: "#{h_config.temp.username}"
       };
     });
 

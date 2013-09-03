@@ -49,6 +49,7 @@ app.configure "production", ->
 # view helpers
 app.helpers
   h_environment: app.settings.env
+  h_config: config
 
 # Router
 config.mainRouter = new MainRouter(app)

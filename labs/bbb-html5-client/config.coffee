@@ -43,4 +43,11 @@ config.redisBridge = null
 config.presentationImageFolder = (meetingID, presentationID) ->
   "/var/bigbluebutton/#{meetingID}/#{meetingID}/#{presentationID}/pngs"
 
+
+# TODO: Temporary values to test the integration with WebRTC audio
+config.temp = {}
+config.temp.username = "WebRTC audio user"
+config.temp.voiceBridge = "79068"
+
+
 module.exports = config

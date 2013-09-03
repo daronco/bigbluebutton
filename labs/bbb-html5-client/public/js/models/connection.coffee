@@ -3,10 +3,17 @@ define [
   'backbone',
   'socket.io',
   'globals',
+  'webrtc',
   'cs!utils'
-], (_, Backbone, IO, globals, Utils) ->
+], (_, Backbone, IO, globals, WebRTC, Utils) ->
 
   ConnectionModel = Backbone.Model.extend
+
+    # TODO: temporary to test audio via WebRTC
+    webrtcConnect: (username, server, voiceBridge, callback) ->
+      server = server.replace(/http[s]?:/, "").replace(/\/*/g, "")
+      WebRTC.connect username, voiceBridge, server, (message) ->
+        callback?(message)
 
     initialize: ->
       @socket = null
