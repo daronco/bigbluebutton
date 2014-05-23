@@ -12,11 +12,6 @@ define [
       @socket = null
       @host = window.location.protocol + "//" + window.location.host
 
-      @authToken = @getUrlVars()["auth_token"]
-      @userId = @getUrlVars()["user_id"]
-      @meetingId = @getUrlVars()["meeting_id"]
-
-
     disconnect: ->
       if @socket?
         console.log "disconnecting from", @host
@@ -25,7 +20,6 @@ define [
         console.log "tried to disconnect but it's not connected"
 
     connect: ->
-      
       console.log("user_id=" + @userId + " auth_token=" + @authToken + " meeting_id=" + @meetingId)
       unless @socket?
         console.log "connecting to the socket.io server", @host
@@ -38,9 +32,6 @@ define [
         @_registerEvents()
       else
         console.log "tried to connect but it's already connected"
-
-    # authenticate: (userId, meetingId) ->
-    #   @socket.emit "message", message
 
     emit: (data) ->
       if @isConnected()
@@ -56,34 +47,15 @@ define [
     # event bus so that other objects can receive them too.
     _registerEvents: ->
 
-      # All messages received from the server fall in this block
+      # all BigBlueButton messages received from the server fall in this block
       @socket.on "message", (data) ->
         console.log "socket.io received: data"
         globals.events.trigger("message", data)
 
-
-      # Immediately say we are connected
+      # when connected to the server
       @socket.on "connect", =>
         console.log "socket on: connect"
-        globals.events.trigger("connection:connected")
-        #@socket.emit "user connect" # tell the server we have a new user
-
-        message = {
-          "payload": {
-              "auth_token": @authToken
-              "userid": @userId
-              "meeting_id": @meetingId
-          },
-          "header": {
-              "timestamp": new Date().getTime()
-              "name": "validate_auth_token"
-          }
-        }
-
-        validFields = @authToken? and @userId? and @meetingId?
-
-        #emit the validate token json message
-        @socket.emit "message", message if validFields
+        globals.events.trigger("connected")
 
       # Received event to logout yourself
       @socket.on "logout", ->
@@ -114,6 +86,12 @@ define [
       # @param  {string} reason Reason for the error.
       @socket.on "error", (reason) ->
         console.error "unable to connect socket.io", reason
+
+
+
+      #
+      # OLD MESSAGES below, to be replaced by `@socket.on "message" (see above)`
+      #
 
       # Received event to update all the slide images
       # @param  {Array} urls list of URLs to be added to the paper (after old images are removed)
@@ -371,13 +349,5 @@ define [
     # Emit signal to clear the canvas
     emitClearCanvas: (id) ->
       @socket.emit "clrPaper", id
-
-    # Helper method to get the meeting_id, user_id and auth_token from the url
-    getUrlVars: ->
-      vars = {}
-      parts = window.location.href.replace(/[?&]+([^=&]+)=([^&]*)/gi, (m,key,value) ->
-        vars[key] = value
-      )
-      vars
 
   ConnectionModel

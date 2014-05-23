@@ -41,7 +41,7 @@ define [
         @_addWelcomeMessage()
 
       else
-        globals.events.on "connection:connected", =>
+        globals.events.on "connected", =>
           @_registerEvents()
           @_addWelcomeMessage()
 
@@ -83,7 +83,7 @@ define [
       # TODO: for now these messages are only being shown in the chat, maybe
       #       they should have their own view and do more stuff
       #       (e.g. disable the interface when disconnected)
-      globals.events.on "connection:connected", =>
+      globals.events.on "connected", =>
         @_addChatMessage("system", "Connected to the server.")
       globals.events.on "connection:disconnected", =>
         @_addChatMessage("system", "Disconnected form the server.")

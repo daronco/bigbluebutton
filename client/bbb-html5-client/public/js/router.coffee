@@ -18,10 +18,10 @@ define [
     initialize: ->
       @appView = new AppView()
 
-    showLogin: () ->#TEMP I want to show the session window right away
+    showLogin: () ->
       globals.router.navigate "/login", {replace: true}
-      @sessionView ?= new SessionView()#TEMP I want to show the session window right away
-      @appView.render(@sessionView)#TEMP I want to show the session window right away
+      @loginView ?= new LoginView()
+      @appView.render(@loginView)
 
     showSession: () ->
       globals.router.navigate "/session", {replace: true}

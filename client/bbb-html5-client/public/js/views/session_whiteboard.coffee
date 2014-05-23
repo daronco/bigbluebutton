@@ -26,7 +26,7 @@ define [
       if globals.connection.isConnected()
         @_registerEvents()
       else
-        globals.events.on "connection:connected", =>
+        globals.events.on "connected", =>
           @_registerEvents()
 
     # Override the close() method so we can close the sub-views.
