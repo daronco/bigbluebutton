@@ -1,5 +1,5 @@
 #!/usr/bin/ruby
-# encoding: UTF-8
+# encoding: utf-8
 
 # Copyright ⓒ 2017 BigBlueButton Inc. and by respective authors.
 #
@@ -14,7 +14,7 @@
 # ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
 # FOR A PARTICULAR PURPOSE.  See the GNU Lesser General Public License for more
 # details.
-# 
+#
 # You should have received a copy of the GNU Lesser General Public License
 # along with BigBlueButton.  If not, see <http://www.gnu.org/licenses/>.
 
@@ -22,15 +22,32 @@ require '../lib/recordandplayback'
 require 'rubygems'
 require 'yaml'
 require 'fileutils'
+require 'trollop'
 
-def publish_processed_meetings(recording_dir)
+opts = Trollop::options do
+  opt :meeting_id, "Target meeting id, optional", :type => String
+end
+target_meeting_id = opts[:meeting_id]
+
+def publish_processed_meetings(recording_dir, target_meeting_id)
   processed_done_files = Dir.glob("#{recording_dir}/status/processed/*.done")
+
+  if target_meeting_id
+    BigBlueButton.logger.info("Publishing only the meeting #{target_meeting_id}")
+  else
+    BigBlueButton.logger.info("Publishing all available meetings")
+  end
 
   FileUtils.mkdir_p("#{recording_dir}/status/published")
   processed_done_files.each do |processed_done|
     match = /([^\/]*)-([^\/-]*).done$/.match(processed_done)
     meeting_id = match[1]
     publish_type = match[2]
+
+    if target_meeting_id && target_meeting_id != meeting_id
+      BigBlueButton.logger.info("Ignoring #{meeting_id}, not the target (#{target_meeting_id})")
+      next
+    end
 
     step_succeeded = false
 
@@ -70,7 +87,7 @@ def publish_processed_meetings(recording_dir)
       FileUtils.rm_f(processed_done)
       FileUtils.rm_rf("#{recording_dir}/process/#{publish_type}/#{meeting_id}")
       FileUtils.rm_rf("#{recording_dir}/publish/#{publish_type}/#{meeting_id}")
-      
+
       # Check if this is the last format to be published
       if Dir.glob("#{recording_dir}/status/processed/#{meeting_id}-*.done").length == 0
         post_publish(meeting_id)
@@ -122,8 +139,8 @@ begin
   BigBlueButton.logger = logger
 
   BigBlueButton.logger.debug("Running rap-publish-worker...")
-  
-  publish_processed_meetings(recording_dir)
+
+  publish_processed_meetings(recording_dir, target_meeting_id)
 
   BigBlueButton.logger.debug("rap-publish-worker done")
 
@@ -133,4 +150,3 @@ rescue Exception => e
     BigBlueButton.logger.error(traceline)
   end
 end
-

@@ -1,5 +1,5 @@
 #!/usr/bin/ruby
-# encoding: UTF-8
+# encoding: utf-8
 
 # Copyright ⓒ 2017 BigBlueButton Inc. and by respective authors.
 #
@@ -14,7 +14,7 @@
 # ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
 # FOR A PARTICULAR PURPOSE.  See the GNU Lesser General Public License for more
 # details.
-# 
+#
 # You should have received a copy of the GNU Lesser General Public License
 # along with BigBlueButton.  If not, see <http://www.gnu.org/licenses/>.
 
@@ -22,14 +22,31 @@ require '../lib/recordandplayback'
 require 'rubygems'
 require 'yaml'
 require 'fileutils'
+require 'trollop'
 
-def process_archived_meetings(recording_dir)
+opts = Trollop::options do
+  opt :meeting_id, "Target meeting id, optional", :type => String
+end
+target_meeting_id = opts[:meeting_id]
+
+def process_archived_meetings(recording_dir, target_meeting_id)
   sanity_done_files = Dir.glob("#{recording_dir}/status/sanity/*.done")
+
+  if target_meeting_id
+    BigBlueButton.logger.info("Processing only the meeting #{target_meeting_id}")
+  else
+    BigBlueButton.logger.info("Processing all available meetings")
+  end
 
   FileUtils.mkdir_p("#{recording_dir}/status/processed")
   sanity_done_files.each do |sanity_done|
     match = /([^\/]*).done$/.match(sanity_done)
     meeting_id = match[1]
+
+    if target_meeting_id && target_meeting_id != meeting_id
+      BigBlueButton.logger.info("Ignoring #{meeting_id}, not the target (#{target_meeting_id})")
+      next
+    end
 
     step_succeeded = true
 
@@ -124,8 +141,8 @@ begin
   BigBlueButton.logger = logger
 
   BigBlueButton.logger.debug("Running rap-process-worker...")
-  
-  process_archived_meetings(recording_dir)
+
+  process_archived_meetings(recording_dir, target_meeting_id)
 
   BigBlueButton.logger.debug("rap-process-worker done")
 
