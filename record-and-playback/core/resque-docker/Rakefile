@@ -1,0 +1,12 @@
+require 'resque/tasks'
+
+task "resque:setup" => :environment do
+  redis_host = ENV['REDIS_HOST'] || '127.0.0.1'
+  redis_port = ENV['REDIS_PORT'] || 6379
+  Resque.redis = "#{redis_host}:#{redis_port}"
+end
+
+task :environment do
+  require File.expand_path('../../lib/recordandplayback', __FILE__)
+  require File.expand_path('../resque_worker', __FILE__)
+end
