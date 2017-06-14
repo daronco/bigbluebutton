@@ -23,3 +23,8 @@ playback_protocol: http
 #recording_dir: /home/ubuntu/temp/recording
 #published_dir: /home/ubuntu/temp/published
 #playback_host: 192.168.22.137
+
+# for remote processing of recordings
+remote_process: false
+copy_from_host: 10.0.3.203
+copy_from_user: ubuntu

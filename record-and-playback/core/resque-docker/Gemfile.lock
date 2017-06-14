@@ -3,6 +3,9 @@ GEM
   specs:
     mono_logger (1.1.0)
     multi_json (1.12.1)
+    net-scp (1.2.1)
+      net-ssh (>= 2.6.5)
+    net-ssh (4.1.0)
     rack (1.6.4)
     rack-protection (1.5.3)
       rack
@@ -28,6 +31,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
+  net-scp
   rake
   resque
 
