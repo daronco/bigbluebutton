@@ -21,7 +21,7 @@ RUN bundle install
 
 ENV QUEUE recordings:process
 ENV VVERBOSE 1
-CMD ["./env-wrapper.sh", "rake", "resque:work"]
+CMD ["./resque-worker-wrapper.sh", "rake", "resque:work"]
 
 # ruby script that listens to redis
 # COPY wait-and-process.rb $app/
