@@ -35,34 +35,34 @@ import org.jongo.*;
 
 public class MongoConnector {
 
-    private DB database;
+  private DB database;
 
-    public MongoConnector() {
-        start();
+  public MongoConnector() {
+    start();
+  }
+
+  public void start() {
+    try {
+      database = new MongoClient().getDB("bigbluebutton");
+    } catch (Exception e) {
+      System.out.println("Error connecting to mongodb: " + e.getMessage());
     }
+  }
 
-	  public void start() {
-        try {
-            database = new MongoClient().getDB("bigbluebutton");
-        } catch (Exception e) {
-            System.out.println("Error connecting to mongodb: " + e.getMessage());
-        }
-	  }
+  public void stop() {
+  }
 
-    public void stop() {
-    }
+  public void createMeeting(String intId, String data) {
+    Jongo jongo = new Jongo(database);
+    MongoCollection collection = jongo.getCollection("meetings");
+    String query = "{ 'meetingProp.intId': '" + intId + "' }";
+    collection.update(query).upsert().with(data);
+  }
 
-    public void createMeeting(String intId, String data) {
-        Jongo jongo = new Jongo(database);
-        MongoCollection collection = jongo.getCollection("meetings");
-        String query = "{ 'meetingProp.intId': '" + intId + "' }";
-        collection.update(query).upsert().with(data);
-    }
-
-    public void removeMeeting(String intId) {
-        Jongo jongo = new Jongo(database);
-        MongoCollection collection = jongo.getCollection("meetings");
-        String query = "{ 'meetingProp.intId': '" + intId + "' }";
-        collection.remove(query);
-    }
+  public void removeMeeting(String intId) {
+    Jongo jongo = new Jongo(database);
+    MongoCollection collection = jongo.getCollection("meetings");
+    String query = "{ 'meetingProp.intId': '" + intId + "' }";
+    collection.remove(query);
+  }
 }
