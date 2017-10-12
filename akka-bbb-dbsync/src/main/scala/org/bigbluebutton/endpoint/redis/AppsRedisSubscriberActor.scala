@@ -50,16 +50,16 @@ class AppsRedisSubscriberActor(val system: ActorSystem,
   write(ClientSetname("BbbTrDBSyncAkkaSub").encodedRequest)
 
   def onMessage(message: Message) {
-    System.out.println(s"onMessage for:\n${message.channel}\n${message.data.utf8String}\n")
+    // System.out.println(s"onMessage for:\n${message.channel}\n${message.data.utf8String}\n")
     msgReceiver.handleMessage("", message.channel, message.data.utf8String)
   }
 
   def onPMessage(message: PMessage) {
-    System.out.println(s"onPMessage for:\n${message.channel}\n${message.patternMatched}\n${message.data.utf8String}\n")
+    // System.out.println(s"onPMessage for:\n${message.channel}\n${message.patternMatched}\n${message.data.utf8String}\n")
     msgReceiver.handleMessage(message.patternMatched, message.channel, message.data.utf8String)
   }
 
   def handleMessage(message: String) {
-    System.out.println(s"handleMessage for:\n${message}\n")
+    // System.out.println(s"handleMessage for:\n${message}\n")
   }
 }

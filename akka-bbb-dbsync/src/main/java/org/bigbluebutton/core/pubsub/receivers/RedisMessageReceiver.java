@@ -8,6 +8,10 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.LinkedBlockingQueue;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+
+import org.bigbluebutton.core.mongo.MongoConnector;
 
 public class RedisMessageReceiver {
     private static final Logger log = LoggerFactory.getLogger(RedisMessageReceiver.class);
@@ -17,6 +21,8 @@ public class RedisMessageReceiver {
     private volatile boolean processMessage = false;
 
     private final Executor msgProcessorExec = Executors.newSingleThreadExecutor();
+
+    private MongoConnector mongo = new MongoConnector();
 
     public RedisMessageReceiver() {
         start();
@@ -54,6 +60,24 @@ public class RedisMessageReceiver {
 	  }
 
 	  private void processMessage(final ReceivedMessage msg) {
-        System.out.println("Processing the message: " + msg.toString());
+        // System.out.println("Processing the message: " + msg.toString());
+        JsonParser parser = new JsonParser();
+        JsonObject obj = (JsonObject) parser.parse(msg.getMessage());
+        if (obj.has("envelope") && obj.has("core")) {
+            JsonObject envelope = (JsonObject) obj.get("envelope");
+            if (envelope.has("name")) {
+                String name = envelope.get("name").getAsString();
+                System.out.println("Message type: " + name);
+
+                switch (name) {
+                case "MeetingCreatedEvtMsg":
+                    JsonObject core = (JsonObject) obj.get("core");
+                    JsonObject body = (JsonObject) core.get("body");
+                    String props = body.get("props").toString();
+                    mongo.createMeeting(props);
+                    break;
+                }
+            }
+        }
 	  }
 }

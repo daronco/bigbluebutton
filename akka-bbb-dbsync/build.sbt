@@ -1,6 +1,6 @@
 enablePlugins(JavaServerAppPackaging)
 
-name := "bbb-transcode-akka"
+name := "bbb-dbsync-akka"
 
 organization := "org.bigbluebutton"
 
@@ -46,7 +46,9 @@ libraryDependencies ++= {
     "junit"                     %  "junit"             % "4.11",
     "commons-codec"             %  "commons-codec"     % "1.10",
     "joda-time"                 %  "joda-time"         % "2.3",
-    "org.apache.commons"        %  "commons-lang3"     % "3.2"
+    "org.apache.commons"        %  "commons-lang3"     % "3.2",
+    "org.mongodb"               %  "mongodb-driver"    % "3.5.0",
+    "org.jongo"                 %  "jongo"             % "1.3.0"
   )}
 
 libraryDependencies += "org.bigbluebutton" % "bbb-common-message_2.12" % "0.0.19-SNAPSHOT"
