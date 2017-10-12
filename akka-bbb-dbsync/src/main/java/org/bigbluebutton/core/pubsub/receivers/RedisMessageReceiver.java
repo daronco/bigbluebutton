@@ -63,6 +63,11 @@ public class RedisMessageReceiver {
         // System.out.println("Processing the message: " + msg.toString());
         JsonParser parser = new JsonParser();
         JsonObject obj = (JsonObject) parser.parse(msg.getMessage());
+        JsonObject core;
+        JsonObject body;
+        JsonObject props;
+        JsonObject meetingProps;
+        String intId;
         if (obj.has("envelope") && obj.has("core")) {
             JsonObject envelope = (JsonObject) obj.get("envelope");
             if (envelope.has("name")) {
@@ -71,10 +76,18 @@ public class RedisMessageReceiver {
 
                 switch (name) {
                 case "MeetingCreatedEvtMsg":
-                    JsonObject core = (JsonObject) obj.get("core");
-                    JsonObject body = (JsonObject) core.get("body");
-                    String props = body.get("props").toString();
-                    mongo.createMeeting(props);
+                    core = (JsonObject) obj.get("core");
+                    body = (JsonObject) core.get("body");
+                    props = (JsonObject) body.get("props");
+                    meetingProps = (JsonObject) props.get("meetingProp");
+                    intId = meetingProps.get("intId").getAsString();
+                    mongo.createMeeting(intId, props.toString());
+                    break;
+                case "MeetingDestroyedEvtMsg":
+                    core = (JsonObject) obj.get("core");
+                    body = (JsonObject) core.get("body");
+                    intId = body.get("meetingId").getAsString();
+                    mongo.removeMeeting(intId);
                     break;
                 }
             }

@@ -52,9 +52,17 @@ public class MongoConnector {
     public void stop() {
     }
 
-    public void createMeeting(String data) {
+    public void createMeeting(String intId, String data) {
         Jongo jongo = new Jongo(database);
         MongoCollection collection = jongo.getCollection("meetings");
-        collection.insert(data);
+        String query = "{ 'meetingProp.intId': '" + intId + "' }";
+        collection.update(query).upsert().with(data);
+    }
+
+    public void removeMeeting(String intId) {
+        Jongo jongo = new Jongo(database);
+        MongoCollection collection = jongo.getCollection("meetings");
+        String query = "{ 'meetingProp.intId': '" + intId + "' }";
+        collection.remove(query);
     }
 }
