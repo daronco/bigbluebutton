@@ -89,7 +89,20 @@ public class RedisMessageReceiver {
           intId = body.get("meetingId").getAsString();
           mongo.removeMeeting(intId);
           break;
+        case "UserJoinedMeetingEvtMsg":
+          core = (JsonObject) obj.get("core");
+          body = (JsonObject) core.get("body");
+          intId = body.get("intId").getAsString();
+          mongo.createUser(intId, core.toString());
+          break;
+        case "UserLeftMeetingEvtMsg":
+          core = (JsonObject) obj.get("core");
+          body = (JsonObject) core.get("body");
+          intId = body.get("intId").getAsString();
+          mongo.removeUser(intId);
+          break;
         }
+        // TODO: remove all users when the meeting ends
       }
     }
   }

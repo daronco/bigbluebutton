@@ -65,4 +65,18 @@ public class MongoConnector {
     String query = "{ 'meetingProp.intId': '" + intId + "' }";
     collection.remove(query);
   }
+
+  public void createUser(String intId, String data) {
+    Jongo jongo = new Jongo(database);
+    MongoCollection collection = jongo.getCollection("users");
+    String query = "{ 'body.intId': '" + intId + "' }";
+    collection.update(query).upsert().with(data);
+  }
+
+  public void removeUser(String intId) {
+    Jongo jongo = new Jongo(database);
+    MongoCollection collection = jongo.getCollection("users");
+    String query = "{ 'body.intId': '" + intId + "' }";
+    collection.remove(query);
+  }
 }
